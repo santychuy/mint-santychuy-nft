@@ -3,20 +3,13 @@ import { ethers, BigNumber } from 'ethers';
 
 import santychuyNFT from '../../artifacts/contracts/SantychuyNFT.sol/SantychuyNFT.json';
 import { santychuyNFTAddress } from '../constants/nft';
+import NavBar from '../components/NavBar';
+import Stepper from '../components/Stepper';
+import styles from '../styles/home.module.css';
 
 const IndexPage = () => {
   const [account, setAccount] = useState<Partial<unknown>>();
   const [mintAmmount, setMintAmmount] = useState(1);
-
-  const connectAccount = async () => {
-    if (window.ethereum) {
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      });
-
-      setAccount(accounts);
-    }
-  };
 
   const handleMint = async () => {
     if (window.ethereum) {
@@ -36,49 +29,37 @@ const IndexPage = () => {
         const res = await contract.mint(BigNumber.from(mintAmmount), {
           value: ethers.utils.parseEther((0.02 * mintAmmount).toString()),
         });
-        console.log('response', res);
+        alert(
+          `Succesfull mint! Here is the transaction of your mint: ${res.hash}`
+        );
       } catch (error) {
         console.log(error.message);
       }
     }
   };
 
-  const decrementMint = () => {
-    if (mintAmmount !== 1) setMintAmmount(mintAmmount - 1);
-  };
-
-  const incrementMint = () => {
-    if (mintAmmount !== 3) setMintAmmount(mintAmmount + 1);
-  };
-
   return (
-    <main>
-      <h1>Welcome to Santychuy NFT Collection 👋</h1>
+    <div>
+      <NavBar accountsWallet={account} setAccount={setAccount} />
+      <main className={styles.container}>
+        <h1>Welcome to Santychuy NFT Collection 👋</h1>
+        <p>The worst styled Mint Page 😅 (soon to be styled)</p>
+        <p>This is only to experiment experience the mint process</p>
 
-      {account ? (
-        <h1>Connected</h1>
-      ) : (
-        <button type="button" onClick={connectAccount}>
-          Connect
-        </button>
-      )}
+        {account && (
+          <div className={styles.mintContainer}>
+            <Stepper
+              mintAmmount={mintAmmount}
+              setMintAmmount={setMintAmmount}
+            />
 
-      {account && (
-        <div>
-          <button type="button" onClick={decrementMint}>
-            -
-          </button>
-          <input type="number" value={mintAmmount} />
-          <button type="button" onClick={incrementMint}>
-            +
-          </button>
-
-          <button type="button" onClick={handleMint}>
-            Mint Now
-          </button>
-        </div>
-      )}
-    </main>
+            <button className={styles.btn} type="button" onClick={handleMint}>
+              Mint Now
+            </button>
+          </div>
+        )}
+      </main>
+    </div>
   );
 };
 
