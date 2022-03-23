@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ethers, BigNumber } from 'ethers';
 
-import santychuyNFT from '../../artifacts/contracts/SantychuyNFT.sol/SantychuyNFT.json';
+import santychuyNFT from '../SantychuyNFT.json';
 import { santychuyNFTAddress } from '../constants/nft';
 import NavBar from '../components/NavBar';
 import Stepper from '../components/Stepper';
